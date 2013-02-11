@@ -31,6 +31,7 @@ namespace ColorCode
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            //Test commit
         }
 
         /// <summary>
