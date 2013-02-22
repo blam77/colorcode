@@ -35,16 +35,17 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Style="{StaticResource PageHeaderTextStyle}" Margin="1,0,29,-1" Grid.Column="1" Text="{StaticResource AppName}"/>
-
-            <StackPanel Margin="0,205,837,-175" Grid.Column="1">
-                <TextBlock Text="What's your name?"/>
-                <StackPanel Orientation="Horizontal" Margin="0,20,0,20">
-                    <TextBox x:Name="nameInput" Width="300" HorizontalAlignment="Left"/>
-                    <Button Content="Say &quot;Hello&quot;"/>
-                </StackPanel>
-                <TextBlock x:Name="greetingOutput"/>
-            </StackPanel>
         </Grid>
+
+        <StackPanel Grid.Row="1" Margin="120,30,0,0">
+            <TextBlock Text="What is the name of the file you wish to create?" Style="{StaticResource BasicTextStyle}"/>
+            <StackPanel Orientation="Horizontal" Margin="0,20,0,20">
+                <TextBox x:Name="nameInput" Width="300" HorizontalAlignment="Left"/>
+                <Button Content="Create File" Click="Button_Click"/>
+            </StackPanel>
+            <TextBlock x:Name="greetingOutput" Style="{StaticResource GreenTextStyle}"/>
+        </StackPanel>
+
 
         <VisualStateManager.VisualStateGroups>
 
