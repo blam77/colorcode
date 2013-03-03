@@ -44,6 +44,8 @@
                 <Button Content="Create File" Click="Button_Click"/>
             </StackPanel>
             <TextBlock x:Name="greetingOutput" Style="{StaticResource GreenTextStyle}"/>
+
+            <Button x:Name="codeEditorButton" Content="Start Editing" Click="EditorButton_Click"/>
         </StackPanel>
 
 

@@ -71,5 +71,14 @@ namespace ColorCode
             Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
             roamingSettings.Values["userName"] = nameInput.Text;
         }
+
+        private void EditorButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Add this code.
+            if (this.Frame != null)
+            {
+                this.Frame.Navigate(typeof(CodeEditor));
+            }
+        }
     }
 }
