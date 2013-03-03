@@ -37,6 +37,17 @@ namespace ColorCode
         /// session.  This will be null the first time a page is visited.</param>
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
+            if (pageState != null && pageState.ContainsKey("greetingOutputText"))
+            {
+                greetingOutput.Text = pageState["greetingOutputText"].ToString();
+            }
+
+            //restore other values in app data
+            Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+            if (roamingSettings.Values.ContainsKey("userName"))
+            {
+                nameInput.Text = roamingSettings.Values["userName"].ToString();
+            }
         }
 
         /// <summary>
@@ -47,11 +58,18 @@ namespace ColorCode
         /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
+            pageState["greetingOutputText"] = greetingOutput.Text;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             greetingOutput.Text = "Hold on while we prepare " + nameInput.Text + "...";
+        }
+
+        private void Input_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+            roamingSettings.Values["userName"] = nameInput.Text;
         }
     }
 }

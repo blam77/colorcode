@@ -40,7 +40,7 @@
         <StackPanel Grid.Row="1" Margin="120,30,0,0">
             <TextBlock Text="What is the name of the file you wish to create?" Style="{StaticResource BasicTextStyle}"/>
             <StackPanel Orientation="Horizontal" Margin="0,20,0,20">
-                <TextBox x:Name="nameInput" Width="300" HorizontalAlignment="Left"/>
+                <TextBox x:Name="nameInput" Width="300" HorizontalAlignment="Left" TextChanged="Input_TextChanged"/>
                 <Button Content="Create File" Click="Button_Click"/>
             </StackPanel>
             <TextBlock x:Name="greetingOutput" Style="{StaticResource GreenTextStyle}"/>
