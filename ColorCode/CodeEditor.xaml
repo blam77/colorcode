@@ -8,7 +8,17 @@
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-        <TextBox x:Name="CodePad" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="748" Width="1346" AcceptsReturn="True" FontFamily="Courier New"/>
-
+        <TextBox 
+            x:Name="CodePad" 
+            HorizontalAlignment="Left" 
+            Margin="10,10,0,0"  
+            TabIndex="1"  
+            TextWrapping="Wrap" 
+            VerticalAlignment="Top" 
+            Height="748" Width="1346" 
+            AcceptsReturn="True"  
+            FontFamily="Courier New" 
+            IsTextPredictionEnabled="False" KeyDown="CodePad_KeyDown"/>
+            
     </Grid>
 </Page>
