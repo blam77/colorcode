@@ -41,7 +41,8 @@ namespace ColorCode
             if (e.Key == Windows.System.VirtualKey.Tab)
             {
                 //Testing tab funcationality
-                CodePad.Text = CodePad.Text + " Woooooo ";
+                CodePad.Text += "\t";
+                CodePad.SelectionStart = CodePad.Text.Length;
             }
         }
     }
