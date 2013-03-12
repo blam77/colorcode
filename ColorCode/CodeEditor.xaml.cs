@@ -41,8 +41,17 @@ namespace ColorCode
             if (e.Key == Windows.System.VirtualKey.Tab)
             {
                 //Testing tab funcationality
-                CodePad.Text += "\t";
-                CodePad.SelectionStart = CodePad.Text.Length;
+                int tempPos = CodePad.SelectionStart;
+
+                //First half of the document
+                CodePad.Select(0, tempPos);
+                String firstString = CodePad.SelectedText;
+                //Second half of the document
+                CodePad.Select(tempPos, CodePad.Text.Length);
+                String secondString = CodePad.SelectedText;
+                //Add them together with a 'tab' which in this case is 5 spaces
+                CodePad.Text = firstString + "     " + secondString;
+                CodePad.SelectionStart = tempPos + 5;
             }
         }
     }
