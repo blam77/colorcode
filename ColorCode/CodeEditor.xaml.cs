@@ -35,6 +35,10 @@ namespace ColorCode
         /// property is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+              String stream = e.Parameter as String;
+              CodePad.Text = "";
+              CodePad.Text = stream;
+      //      CodePad.Text.setSource(e.stream);
         }
 
         private void CodePad_KeyDown(object sender, KeyRoutedEventArgs e)

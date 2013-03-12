@@ -64,7 +64,7 @@ namespace ColorCode
             pageState["greetingOutputText"] = greetingOutput.Text;
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void sButton_Click(object sender, RoutedEventArgs e)
         {
         //    string x = nameInput.Text;
 
@@ -72,7 +72,7 @@ namespace ColorCode
         //    StorageFile sampleFile = await storageFolder.CreateFileAsync(x);
        
            if (EnsureUnsnapped())
-            {
+           {
                 FileSavePicker savePicker = new FileSavePicker();
                 savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
                 // Dropdown of file types the user can save the file as
@@ -82,7 +82,53 @@ namespace ColorCode
 
                 IAsyncOperation<StorageFile> asyncOp = savePicker.PickSaveFileAsync();
                 StorageFile file = await asyncOp;
+           }
+
+           if (this.Frame != null)
+           {
+               this.Frame.Navigate(typeof(CodeEditor));
+           }
+
+
+        }
+
+        private async void oButton_Click(object sender, RoutedEventArgs e)
+        {
+            //    string x = nameInput.Text;
+
+            //   StorageFolder storageFolder = KnownFolders.DocumentsLibrary;
+            //    StorageFile sampleFile = await storageFolder.CreateFileAsync(x);
+
+            if (EnsureUnsnapped())
+            {
+                FileOpenPicker openPicker = new FileOpenPicker();
+                openPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+                // Dropdown of file types the user can save the file as
+                openPicker.ViewMode = PickerViewMode.List;
+                openPicker.FileTypeFilter.Add(".txt");
+                    
+                IAsyncOperation<StorageFile> asyncOp = openPicker.PickSingleFileAsync();
+                StorageFile file = await asyncOp;
+
+                if (file != null)
+                {
+                   
+                    
+                    //var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                   
+                    var _Content = await Windows.Storage.FileIO.ReadTextAsync(file);
+                    //await new Windows.UI.Popups.MessageDialog(_Content).ShowAsync();
+
+                    if (this.Frame != null)
+                    {
+                        this.Frame.Navigate(typeof(CodeEditor), _Content.ToString());
+                    }
+                }
             }
+
+           
+
+           
 
 
         }
