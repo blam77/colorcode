@@ -21,4 +21,21 @@
             IsTextPredictionEnabled="False" KeyDown="CodePad_KeyDown" UseLayoutRounding="False"/>
             
     </Grid>
+    <Page.BottomAppBar>
+        <AppBar x:Name="bottomAppBar" Padding="10,0,10,0">
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button Style="{StaticResource BackButtonStyle}" Click="GoBack"/>
+
+                    
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource RefreshAppBarButtonStyle}" Click="Button_Click"/>
+                    <Button Style="{StaticResource OpenFileAppBarButtonStyle}" Click="Button_Click"/>
+                    <Button Style="{StaticResource SaveAppBarButtonStyle}" Click="Button_Click"/>
+                </StackPanel>
+            </Grid>
+        </AppBar>
+    </Page.BottomAppBar>
+
 </Page>
