@@ -20,6 +20,7 @@ namespace ColorCode
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
+
     public sealed partial class CodeEditor : Page
     {
         public CodeEditor()
@@ -46,12 +47,22 @@ namespace ColorCode
                 //First half of the document
                 CodePad.Select(0, tempPos);
                 String firstString = CodePad.SelectedText;
+
                 //Second half of the document
                 CodePad.Select(tempPos, CodePad.Text.Length);
                 String secondString = CodePad.SelectedText;
-                //Add them together with a 'tab' which in this case is 5 spaces
-                CodePad.Text = firstString + "     " + secondString;
-                CodePad.SelectionStart = tempPos + 5;
+
+                //Add firstString together with a 'tab'
+                CodePad.Text = firstString + "\t";
+
+                //save cursor to the after tab spot
+                int tempPos2 = firstString.Length + 1;
+
+                //add the second half of the text back
+                CodePad.Text += secondString;
+
+                //set cursor back to tab spot
+                CodePad.SelectionStart = tempPos2;
             }
         }
     }

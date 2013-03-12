@@ -15,7 +15,6 @@
             TabIndex="1"  
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
-            Height="748" Width="1346" 
             AcceptsReturn="True"  
             FontFamily="Courier New" 
             IsTextPredictionEnabled="False" KeyDown="CodePad_KeyDown"/>
