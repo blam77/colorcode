@@ -41,6 +41,7 @@ namespace ColorCode
               String stream = e.Parameter as String;
               CodePad.Text = "";
               CodePad.Text = stream;
+              RichCodePad.Document.SetText(Windows.UI.Text.TextSetOptions.None, stream);
       //      CodePad.Text.setSource(e.stream);
         }
 
