@@ -8,18 +8,24 @@
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <RichEditBox x:Name="RichCodePad" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,20,0,0"
+                     BorderThickness="0"
+                     AcceptsReturn="True"
+                     IsTextPredictionEnabled="False"
+                     FontFamily="Courier New"
+                     IsSpellCheckEnabled="False"
+                     TextWrapping="Wrap" Background="White" KeyDown="RichPad_KeyDown"/>
         <TextBox 
             x:Name="CodePad"
             BorderThickness="0"
             HorizontalAlignment="Left" 
+            Opacity="0"
             Margin="10,10,0,0"  
-            TabIndex="1"  
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             AcceptsReturn="True"  
             FontFamily="Courier New" 
-            IsTextPredictionEnabled="False" KeyDown="CodePad_KeyDown" UseLayoutRounding="False"/>
-            
+            IsTextPredictionEnabled="False" KeyDown="CodePad_KeyDown" UseLayoutRounding="False" IsTabStop="False"/>
     </Grid>
     <Page.BottomAppBar>
         <AppBar x:Name="bottomAppBar" Padding="10,0,10,0">

@@ -23,6 +23,9 @@ namespace ColorCode
 
     public sealed partial class CodeEditor : Page
     {
+        string textFromCodePad;
+        //string textFromRichPad;
+
         public CodeEditor()
         {
             this.InitializeComponent();
@@ -67,6 +70,44 @@ namespace ColorCode
 
                 //set cursor back to tab spot
                 CodePad.SelectionStart = tempPos2;
+
+                textFromCodePad = CodePad.Text;
+                //return CodePad.Text;
+            }
+        }
+
+        private void RichPad_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            
+            if (e.Key == Windows.System.VirtualKey.Tab)
+            {
+                //Testing tab funcationality
+                int tempPos;
+                var select = RichCodePad.Document.Selection;
+                string body;
+                RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.UseCrlf, out body);
+
+
+                tempPos = select.StartPosition;
+                //First half of the document
+                var firstRange = RichCodePad.Document.GetRange(0, tempPos);
+                String firstString;
+                firstRange.GetText(Windows.UI.Text.TextGetOptions.None, out firstString); ;
+
+                //Second half of the document
+                var secondRange = RichCodePad.Document.GetRange(tempPos, body.Length);
+                String secondString;
+                secondRange.GetText(Windows.UI.Text.TextGetOptions.None, out secondString);
+
+                //Add firstString together with a 'tab'
+                body = firstString + "\t";
+
+                //add the second half of the text back
+                body += secondString;
+
+                //save cursor to the after tab spot
+                RichCodePad.Document.SetText(Windows.UI.Text.TextSetOptions.None, body);
+                RichCodePad.Document.Selection.StartPosition = firstString.Length + 1;
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
