@@ -9,7 +9,8 @@
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <TextBox 
-            x:Name="CodePad" 
+            x:Name="CodePad"
+            BorderThickness="0"
             HorizontalAlignment="Left" 
             Margin="10,10,0,0"  
             TabIndex="1"  
@@ -17,7 +18,7 @@
             VerticalAlignment="Top" 
             AcceptsReturn="True"  
             FontFamily="Courier New" 
-            IsTextPredictionEnabled="False" KeyDown="CodePad_KeyDown"/>
+            IsTextPredictionEnabled="False" KeyDown="CodePad_KeyDown" UseLayoutRounding="False"/>
             
     </Grid>
 </Page>
