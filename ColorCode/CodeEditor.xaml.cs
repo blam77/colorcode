@@ -65,5 +65,16 @@ namespace ColorCode
                 CodePad.SelectionStart = tempPos2;
             }
         }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void GoBack(object sender, RoutedEventArgs e)
+        {
+            if (this.Frame != null)
+            {
+                this.Frame.Navigate(typeof(MainPage));
+            }
+        }
     }
 }

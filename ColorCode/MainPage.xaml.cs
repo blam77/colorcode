@@ -4,6 +4,9 @@ using System.IO;
 using System.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -61,9 +64,27 @@ namespace ColorCode
             pageState["greetingOutputText"] = greetingOutput.Text;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            greetingOutput.Text = "Hold on while we prepare " + nameInput.Text + "...";
+        //    string x = nameInput.Text;
+
+        //   StorageFolder storageFolder = KnownFolders.DocumentsLibrary;
+        //    StorageFile sampleFile = await storageFolder.CreateFileAsync(x);
+       
+           if (EnsureUnsnapped())
+            {
+                FileSavePicker savePicker = new FileSavePicker();
+                savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+                // Dropdown of file types the user can save the file as
+                savePicker.FileTypeChoices.Add("Plain Text", new List<string>() { ".txt" });
+                // Default file name if the user does not type one in or select a file to replace
+                savePicker.SuggestedFileName = "New Document";
+
+                IAsyncOperation<StorageFile> asyncOp = savePicker.PickSaveFileAsync();
+                StorageFile file = await asyncOp;
+            }
+
+
         }
 
         private void Input_TextChanged(object sender, TextChangedEventArgs e)
@@ -79,6 +100,19 @@ namespace ColorCode
             {
                 this.Frame.Navigate(typeof(CodeEditor));
             }
+        }
+
+        internal bool EnsureUnsnapped()
+        {
+            // FilePicker APIs will not work if the application is in a snapped state.
+            // If an app wants to show a FilePicker while snapped, it must attempt to unsnap first
+            bool unsnapped = ((ApplicationView.Value != ApplicationViewState.Snapped) || ApplicationView.TryUnsnap());
+            if (!unsnapped)
+            {
+                
+            }
+
+            return unsnapped;
         }
     }
 }
