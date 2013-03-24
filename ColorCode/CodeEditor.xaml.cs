@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
+using Windows.System;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -55,6 +56,9 @@ namespace ColorCode
               
       //      CodePad.Text.setSource(e.stream);
         }
+
+
+
 
         private void CodePad_KeyDown(object sender, KeyRoutedEventArgs e)
         {
