@@ -10,7 +10,7 @@ using Windows.Storage;
 namespace ColorCode
 {
 
-    class InitializeKeyTerms
+    public class InitializeKeyTerms
     {
         public HashSet<string> javaSet_type;
         public HashSet<string> javaSet_cond;
@@ -21,41 +21,51 @@ namespace ColorCode
             javaSet_type = new HashSet<string>();
             javaSet_cond = new HashSet<string>();
 
-            string[] items = javaTerms.Split(new string[] { "=" }, StringSplitOptions.None);
-            string[] cond = items[0].Split(new string[] { ";" }, StringSplitOptions.None);
-            string[] type = items[1].Split(new string[] { ";" }, StringSplitOptions.None);
-            
-            foreach (string s in cond)
-            {
-                javaSet_cond.Add(s);
-            }
-
-            foreach (string s in type)
-            {
-                javaSet_type.Add(s);
-            }
+            //loadFiles();
         }
 
-        private async void loadFiles()
+        public async void loadFiles()
         {
-            javaTerms = await ReadFromKeyTermsFile("Assets/JavaKeyTerms.txt");
+            string path = @"Assets\JavaKeyTerms.txt";
+            javaTerms = await ReadFromKeyTermsFile(path);
+            loadHashes(javaTerms);
+        }
+
+        private void loadHashes(string terms)
+        {
+            if (terms != null)
+            {
+                string[] items = terms.Split(new string[] { "=" }, StringSplitOptions.None);
+                string[] cond = items[0].Split(new string[] { ";", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                string[] type = items[1].Split(new string[] { ";", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string s in cond)
+                {
+                    javaSet_cond.Add(s);
+                }
+
+                foreach (string s in type)
+                {
+                    javaSet_type.Add(s);
+                }
+            }
         }
 
         private async Task<string> ReadFromKeyTermsFile(string path)
         {
-            Windows.Storage.StorageFile javaData = null;
-            Windows.ApplicationModel.Package pack = Windows.ApplicationModel.Package.Current;
-            Windows.Storage.StorageFolder folder = pack.InstalledLocation;
-            javaData = await folder.GetFileAsync(path);
-            if(javaData != null)
+            path = @"Assets\JavaKeyTerms.txt";
+            StorageFolder assetFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
+            StorageFile file = null;
+            while (file == null)
             {
-                string fileContent = await FileIO.ReadTextAsync(javaData);
-                return fileContent;
+                file = await assetFolder.GetFileAsync(path);
             }
+            string contents = await FileIO.ReadTextAsync(file);
+
+            if (file != null)
+                return contents;
             else
-            {
-                return "File not found";
-            }
+                return "Did not work!";
         }
     }
 }

@@ -27,6 +27,7 @@ namespace ColorCode
         public MainPage()
         {
             this.InitializeComponent();
+            App.terms.loadFiles();
         }
 
         /// <summary>

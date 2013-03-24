@@ -1,5 +1,4 @@
-﻿=
-assert;
+﻿assert;
 break;
 case;
 catch;
