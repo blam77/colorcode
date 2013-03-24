@@ -82,12 +82,13 @@ namespace ColorCode
 
                 IAsyncOperation<StorageFile> asyncOp = savePicker.PickSaveFileAsync();
                 StorageFile file = await asyncOp;
+                if (this.Frame != null || file != null)
+                {
+                    this.Frame.Navigate(typeof(CodeEditor));
+                }
            }
 
-           if (this.Frame != null)
-           {
-               this.Frame.Navigate(typeof(CodeEditor));
-           }
+           
 
 
         }
@@ -116,20 +117,16 @@ namespace ColorCode
                     
                     //var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
                    
-                    var _Content = await Windows.Storage.FileIO.ReadTextAsync(file);
+                    
+
                     //await new Windows.UI.Popups.MessageDialog(_Content).ShowAsync();
 
                     if (this.Frame != null)
                     {
-                        this.Frame.Navigate(typeof(CodeEditor), _Content.ToString());
+                        this.Frame.Navigate(typeof(CodeEditor), file);
                     }
                 }
             }
-
-           
-
-           
-
 
         }
 

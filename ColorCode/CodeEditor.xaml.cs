@@ -12,6 +12,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.Storage.Pickers;
+using Windows.Storage;
+using Windows.UI.ViewManagement;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -24,6 +27,7 @@ namespace ColorCode
     public sealed partial class CodeEditor : Page
     {
         string textFromCodePad;
+        StorageFile globalFile;
         //string textFromRichPad;
 
         public CodeEditor()
@@ -36,12 +40,19 @@ namespace ColorCode
         /// </summary>
         /// <param name="e">Event data that describes how this page was reached.  The Parameter
         /// property is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-              String stream = e.Parameter as String;
+              StorageFile file = e.Parameter as StorageFile;
               CodePad.Text = "";
-              CodePad.Text = stream;
-              RichCodePad.Document.SetText(Windows.UI.Text.TextSetOptions.None, stream);
+              if (file != null)
+              {
+                  var _Content = await Windows.Storage.FileIO.ReadTextAsync(file);
+                  var _Path = file.Path;
+                  CodePad.Text = _Content;
+                  RichCodePad.Document.SetText(Windows.UI.Text.TextSetOptions.None, _Content);
+              }
+              globalFile = file;
+              
       //      CodePad.Text.setSource(e.stream);
         }
 
@@ -115,12 +126,122 @@ namespace ColorCode
         {
         }
 
+        private async void oButton_Click(object sender, RoutedEventArgs e)
+        {
+            //    string x = nameInput.Text;
+
+            //   StorageFolder storageFolder = KnownFolders.DocumentsLibrary;
+            //    StorageFile sampleFile = await storageFolder.CreateFileAsync(x);
+
+            if (EnsureUnsnapped())
+            {
+                FileOpenPicker openPicker = new FileOpenPicker();
+                openPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+                // Dropdown of file types the user can save the file as
+                openPicker.ViewMode = PickerViewMode.List;
+                openPicker.FileTypeFilter.Add(".txt");
+
+                IAsyncOperation<StorageFile> asyncOp = openPicker.PickSingleFileAsync();
+                StorageFile file = await asyncOp;
+
+                if (file != null)
+                {
+
+
+                    //var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+
+                    //await new Windows.UI.Popups.MessageDialog(_Content).ShowAsync();
+
+                    if (this.Frame != null)
+                    {
+                        this.Frame.Navigate(typeof(CodeEditor), file);
+                    }
+                }
+            }
+
+        }
+
+        private async void saButton_Click(object sender, RoutedEventArgs e)
+        {
+            //    string x = nameInput.Text;
+
+            //   StorageFolder storageFolder = KnownFolders.DocumentsLibrary;
+            //    StorageFile sampleFile = await storageFolder.CreateFileAsync(x);
+
+            if (EnsureUnsnapped())
+            {
+                FileSavePicker savePicker = new FileSavePicker();
+                savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+                // Dropdown of file types the user can save the file as
+                savePicker.FileTypeChoices.Add("Plain Text", new List<string>() { ".txt" });
+                // Default file name if the user does not type one in or select a file to replace
+                savePicker.SuggestedFileName = "New Document";
+
+                IAsyncOperation<StorageFile> asyncOp = savePicker.PickSaveFileAsync();
+                StorageFile file = await asyncOp;
+                if (file != null)
+                {
+                    string _Content;
+                    RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.UseCrlf, out _Content);
+                    await FileIO.WriteTextAsync(file, _Content);
+                    if (this.Frame != null)
+                    {
+                        this.Frame.Navigate(typeof(CodeEditor), file);
+                    }
+
+                }
+                
+            }
+        }
+
+        private async void sButton_Click(object sender, RoutedEventArgs e)
+        {
+            //    string x = nameInput.Text;
+
+            //   StorageFolder storageFolder = KnownFolders.DocumentsLibrary;
+            //    StorageFile sampleFile = await storageFolder.CreateFileAsync(x);
+
+            if (EnsureUnsnapped())
+            {
+
+                
+                StorageFile file = globalFile;
+                if (file == null)
+                {
+                    //insert warning
+                }
+                else
+                {
+                    string _Content;
+                    RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.UseCrlf, out _Content);
+                    await FileIO.WriteTextAsync(file, _Content);
+                    if (this.Frame != null)
+                    {
+                        this.Frame.Navigate(typeof(CodeEditor), file);
+                    }
+                }
+            }
+        }
+
         private void GoBack(object sender, RoutedEventArgs e)
         {
             if (this.Frame != null)
             {
                 this.Frame.Navigate(typeof(MainPage));
             }
+        }
+
+        internal bool EnsureUnsnapped()
+        {
+            // FilePicker APIs will not work if the application is in a snapped state.
+            // If an app wants to show a FilePicker while snapped, it must attempt to unsnap first
+            bool unsnapped = ((ApplicationView.Value != ApplicationViewState.Snapped) || ApplicationView.TryUnsnap());
+            if (!unsnapped)
+            {
+
+            }
+
+            return unsnapped;
         }
     }
 }
