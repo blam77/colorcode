@@ -7,9 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-        <RichEditBox x:Name="RichCodePad" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,20,0,0"
+    <Grid Background="#FFEC6F6F">
+        <RichEditBox x:Name="RichCodePad" Margin="20,20,20,20"
                      BorderThickness="0"
+                     Grid.Column="1"
+                     Grid.Row="1"
                      AcceptsReturn="True"
                      IsTextPredictionEnabled="False"
                      FontFamily="Courier New"
@@ -33,7 +35,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <Button Style="{StaticResource BackButtonStyle}" Click="GoBack"/>
 
-                    
+
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Style="{StaticResource RefreshAppBarButtonStyle}" Click="Button_Click"/>
