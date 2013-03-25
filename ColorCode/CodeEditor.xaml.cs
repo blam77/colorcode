@@ -16,6 +16,7 @@ using Windows.Storage.Pickers;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.System;
+using System.Text.RegularExpressions;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -27,8 +28,9 @@ namespace ColorCode
 
     public sealed partial class CodeEditor : Page
     {
-        string textFromCodePad;
+        //string textFromCodePad;
         StorageFile globalFile;
+        Boolean isCtrlKeyPressed;
         //string textFromRichPad;
 
         public CodeEditor()
@@ -58,9 +60,44 @@ namespace ColorCode
         }
 
 
+        private void RichPad_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Control) isCtrlKeyPressed = false;
 
 
-        private void CodePad_KeyDown(object sender, KeyRoutedEventArgs e)
+            string str;
+            RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out str);
+            List<int> intz = new List<int>();
+            List<int> intz_visited = new List<int>();
+            foreach (Match match in Regex.Matches(str, "(\r\n(int)\r\n|\r\nint | int\r\n| int )"))
+            {
+                intz.Add(match.Index);
+            }
+            if (e.Key == Windows.System.VirtualKey.Space || e.Key == VirtualKey.Enter)
+            {
+                var selectTwo = RichCodePad.Document.Selection.StartPosition;
+
+                var select = RichCodePad.Document.Selection;
+                
+
+                for (int i = 0; i < intz.Count; i++)
+                {
+                    if (intz_visited.Contains(intz[i]) == false)
+                    {
+                        select.StartPosition = intz[i];
+                        select.EndPosition = intz[i] + 3;
+                        RichCodePad.Document.GetRange(select.StartPosition, select.EndPosition).CharacterFormat.ForegroundColor = Windows.UI.Colors.Blue;
+                        intz_visited.Add(i);
+                    }
+                }
+
+                select.StartPosition = selectTwo;
+            }
+       }
+
+        
+
+        /*private void CodePad_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Tab)
             {
@@ -90,7 +127,7 @@ namespace ColorCode
                 textFromCodePad = CodePad.Text;
                 //return CodePad.Text;
             }
-        }
+        }*/
 
         private void RichPad_KeyDown(object sender, KeyRoutedEventArgs e)
         {
@@ -124,6 +161,21 @@ namespace ColorCode
                 //save cursor to the after tab spot
                 RichCodePad.Document.SetText(Windows.UI.Text.TextSetOptions.None, body);
                 RichCodePad.Document.Selection.StartPosition = firstString.Length + 1;
+            }
+            if (e.Key == Windows.System.VirtualKey.Control) isCtrlKeyPressed = true;
+            else if (isCtrlKeyPressed)
+            {
+
+                if (e.Key == VirtualKey.O)
+                {
+                    oButton_Click(this, e);
+                }
+                if (e.Key == VirtualKey.S)
+                {
+                    sButton_Click(this, e);
+                }
+
+
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -188,11 +240,11 @@ namespace ColorCode
                     string _Content;
                     RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.UseCrlf, out _Content);
                     await FileIO.WriteTextAsync(file, _Content);
-                    if (this.Frame != null)
+             /*       if (this.Frame != null)
                     {
                         this.Frame.Navigate(typeof(CodeEditor), file);
                     }
-
+                    */
                 }
                 
             }
@@ -210,6 +262,8 @@ namespace ColorCode
 
                 
                 StorageFile file = globalFile;
+                var select = RichCodePad.Document.Selection;
+
                 if (file == null)
                 {
                     //insert warning
@@ -219,10 +273,19 @@ namespace ColorCode
                     string _Content;
                     RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.UseCrlf, out _Content);
                     await FileIO.WriteTextAsync(file, _Content);
-                    if (this.Frame != null)
+                /*    if (this.Frame != null)
                     {
-                        this.Frame.Navigate(typeof(CodeEditor), file);
-                    }
+                        CodePad.Text = "";
+                        if (file != null)
+                        {
+                            var _Content1 = await Windows.Storage.FileIO.ReadTextAsync(file);
+                            var _Path = file.Path;
+                            CodePad.Text = _Content1;
+                            RichCodePad.Document.SetText(Windows.UI.Text.TextSetOptions.None, _Content);
+                            RichCodePad.Document.Selection.StartPosition = select.StartPosition;
+
+                        }
+                    }  */
                 }
             }
         }

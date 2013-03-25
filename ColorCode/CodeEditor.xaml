@@ -16,7 +16,7 @@
                      IsTextPredictionEnabled="False"
                      FontFamily="Courier New"
                      IsSpellCheckEnabled="False"
-                     TextWrapping="Wrap" Background="White" KeyDown="RichPad_KeyDown"/>
+                     TextWrapping="Wrap" Background="White" KeyDown="RichPad_KeyDown" KeyUp="RichPad_KeyUp"/>
         <TextBox 
             x:Name="CodePad"
             BorderThickness="0"
@@ -27,7 +27,7 @@
             VerticalAlignment="Top" 
             AcceptsReturn="True"  
             FontFamily="Courier New" 
-            IsTextPredictionEnabled="False" KeyDown="CodePad_KeyDown" UseLayoutRounding="False" IsTabStop="False"/>
+            IsTextPredictionEnabled="False" UseLayoutRounding="False" IsTabStop="False"/>
     </Grid>
     <Page.BottomAppBar>
         <AppBar x:Name="bottomAppBar" Padding="10,0,10,0">
