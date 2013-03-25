@@ -68,24 +68,28 @@ namespace ColorCode
             string str;
             RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out str);
             List<int> intz = new List<int>();
+            List<string> words = new List<string>();
             List<int> intz_visited = new List<int>();
-            foreach (Match match in Regex.Matches(str, "(\r\n(int)\r\n|\r\nint | int\r\n| int )"))
+            foreach (Match match in Regex.Matches(str, @"\sint\b|\bint\s|\bint\\;?"))
             {
-                intz.Add(match.Index);
+                    intz.Add(match.Index);
+                    words.Add(match.ToString());
             }
             if (e.Key == Windows.System.VirtualKey.Space || e.Key == VirtualKey.Enter)
             {
                 var selectTwo = RichCodePad.Document.Selection.StartPosition;
 
                 var select = RichCodePad.Document.Selection;
-                
+
+                //color the textbox black before you recolor blue
+                RichCodePad.Document.GetRange(0, str.Length).CharacterFormat.ForegroundColor = Windows.UI.Colors.Black;
 
                 for (int i = 0; i < intz.Count; i++)
                 {
                     if (intz_visited.Contains(intz[i]) == false)
                     {
                         select.StartPosition = intz[i];
-                        select.EndPosition = intz[i] + 3;
+                        select.EndPosition = intz[i] + words[i].Length;
                         RichCodePad.Document.GetRange(select.StartPosition, select.EndPosition).CharacterFormat.ForegroundColor = Windows.UI.Colors.Blue;
                         intz_visited.Add(i);
                     }
@@ -309,6 +313,36 @@ namespace ColorCode
             }
 
             return unsnapped;
+        }
+
+        private void RichPad_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            /*string str;
+            RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out str);
+            List<int> intz = new List<int>();
+            List<int> intz_visited = new List<int>();
+
+            foreach (Match match in Regex.Matches(str, "(\r\n(int)\r\n|\r\nint | int\r\n| int )"))
+            {
+                intz.Add(match.Index);
+            }
+                var selectTwo = RichCodePad.Document.Selection.StartPosition;
+
+                var select = RichCodePad.Document.Selection;
+
+
+                for (int i = 0; i < intz.Count; i++)
+                {
+                    if (intz_visited.Contains(intz[i]) == false)
+                    {
+                        select.StartPosition = intz[i];
+                        select.EndPosition = intz[i] + 3;
+                        RichCodePad.Document.GetRange(select.StartPosition, select.EndPosition).CharacterFormat.ForegroundColor = Windows.UI.Colors.Blue;
+                        intz_visited.Add(i);
+                    }
+                }
+
+                select.StartPosition = selectTwo;*/
         }
     }
 }

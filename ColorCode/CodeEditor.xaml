@@ -16,7 +16,7 @@
                      IsTextPredictionEnabled="False"
                      FontFamily="Courier New"
                      IsSpellCheckEnabled="False"
-                     TextWrapping="Wrap" Background="White" KeyDown="RichPad_KeyDown" KeyUp="RichPad_KeyUp"/>
+                     TextWrapping="Wrap" Background="White" KeyDown="RichPad_KeyDown" KeyUp="RichPad_KeyUp" SelectionChanged="RichPad_SelectionChanged"/>
         <TextBox 
             x:Name="CodePad"
             BorderThickness="0"
