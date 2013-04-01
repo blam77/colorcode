@@ -7,27 +7,31 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="#FF786E6E">
-        <RichEditBox x:Name="RichCodePad" Margin="20,20,20,20" 
+    <Grid Background="White">
+        <TextBlock x:Name="LineNumbers" 
+                   HorizontalAlignment="Left" 
+                   Margin="20,24,0,0" 
+                   TextWrapping="Wrap" 
+                   Text="1" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14.667" Foreground="Black"
+                   Padding="0" ScrollViewer.VerticalScrollBarVisibility="Disabled" LineHeight="10"/>
+        <RichEditBox x:Name="RichCodePad" Margin="50,20,20,20" 
                      BorderThickness="0"
-                     Grid.Column="1"
-                     Grid.Row="1"
                      AcceptsReturn="True"
                      IsTextPredictionEnabled="False"
                      FontFamily="Courier New"
                      IsSpellCheckEnabled="False"
-                     TextWrapping="Wrap" Background="#FFDCD2D2" KeyDown="RichPad_KeyDown" KeyUp="RichPad_KeyUp" SelectionChanged="RichPad_SelectionChanged"/>
+                     TextWrapping="Wrap" Background="White" KeyDown="RichPad_KeyDown" KeyUp="RichPad_KeyUp" SelectionChanged="RichPad_SelectionChanged"/>
         <TextBox 
             x:Name="CodePad"
             BorderThickness="0"
             HorizontalAlignment="Left" 
             Opacity="0"
-            Margin="10,10,0,0"  
+            Margin="10,22,0,0"  
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             AcceptsReturn="True"  
             FontFamily="Courier New" 
-            IsTextPredictionEnabled="False" UseLayoutRounding="False" IsTabStop="False"/>
+            IsTextPredictionEnabled="False" UseLayoutRounding="False" IsTabStop="False" Width="35"/>
     </Grid>
     <Page.BottomAppBar>
         <AppBar x:Name="bottomAppBar" Padding="10,0,10,0">

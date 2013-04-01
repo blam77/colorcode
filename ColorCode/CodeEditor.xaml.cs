@@ -99,8 +99,12 @@ namespace ColorCode
 
                 select.StartPosition = selectTwo;
             }*/
-            if (e.Key == Windows.System.VirtualKey.Space || e.Key == VirtualKey.Enter)
+            if (e.Key == Windows.System.VirtualKey.Space || e.Key == VirtualKey.Enter || e.Key == VirtualKey.Back)
+            {
+                
                 syntax_highlight();
+                check_lineNumbers();
+            }
        }
 
         private void RichPad_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -156,6 +160,23 @@ namespace ColorCode
             }
         }
 
+        private void check_lineNumbers()
+        {
+            string s;
+            int count = 0;
+            RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out s);
+            foreach (Match m in Regex.Matches(s, @"\r(\w+)|(\w+)\r|\r")) 
+            {
+                count++;
+            }
+            LineNumbers.Text = "";
+            for (int i = 1; i < count+1; i++)
+            {
+                LineNumbers.Text += i;
+                LineNumbers.Text += "\r";
+            }
+        }
+
         private void syntax_highlight()
         {
             string str;
@@ -198,7 +219,7 @@ namespace ColorCode
                 {
                     select1.StartPosition = highlights2[h];
                     select1.EndPosition = highlights2[h] + wordsToHighlight2[h].Length;
-                    RichCodePad.Document.GetRange(select1.StartPosition, select1.EndPosition).CharacterFormat.ForegroundColor = Windows.UI.Colors.Red;
+                    RichCodePad.Document.GetRange(select1.StartPosition, select1.EndPosition).CharacterFormat.ForegroundColor = Windows.UI.Colors.Indigo;
                 }
             
 
@@ -223,6 +244,7 @@ namespace ColorCode
                 // Dropdown of file types the user can save the file as
                 openPicker.ViewMode = PickerViewMode.List;
                 openPicker.FileTypeFilter.Add(".txt");
+                //openPicker.FileTypeFilter.Add(".java");
 
                 IAsyncOperation<StorageFile> asyncOp = openPicker.PickSingleFileAsync();
                 StorageFile file = await asyncOp;
