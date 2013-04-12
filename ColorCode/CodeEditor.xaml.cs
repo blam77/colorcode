@@ -124,7 +124,7 @@ namespace ColorCode
                 int tempPos;
                 var select = RichCodePad.Document.Selection;
                 string body;
-                RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.UseCrlf, out body);
+                RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out body);
 
 
                 tempPos = select.StartPosition;
@@ -137,6 +137,9 @@ namespace ColorCode
                 var secondRange = RichCodePad.Document.GetRange(tempPos, body.Length);
                 String secondString;
                 secondRange.GetText(Windows.UI.Text.TextGetOptions.None, out secondString);
+                int bodyLength = body.Length;
+                if (tempPos == bodyLength - 1)
+                    secondString = "";
 
                 //Add firstString together with a 'tab'
                 body = firstString + "\t";
@@ -173,6 +176,7 @@ namespace ColorCode
             string s;
             int count = 0;
             RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out s);
+           
             foreach (Match m in Regex.Matches(s, @"\r(\w+)|(\w+)\r|\r")) 
             {
                 count++;
@@ -183,6 +187,7 @@ namespace ColorCode
                 LineNumbers.Text += i;
                 LineNumbers.Text += "\r";
             }
+            
         }
 
         private void syntax_highlight()
@@ -229,9 +234,24 @@ namespace ColorCode
                     select1.EndPosition = highlights2[h] + wordsToHighlight2[h].Length;
                     RichCodePad.Document.GetRange(select1.StartPosition, select1.EndPosition).CharacterFormat.ForegroundColor = Windows.UI.Colors.Indigo;
                 }
-            
+
+
+            //still working here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+               foreach (Match match in Regex.Matches(str, @"\/{2}?([^\r]*)\r"))
+                {
+                    int first = match.Index;
+                    string end = match.ToString();
+                    int len = end.Length; 
+                    RichCodePad.Document.GetRange(first, first+len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Green;
+                }
+
+               foreach (Match match in Regex.Matches(str, @"\b\\?\\/?(\w+)\r\b"))
+               {
+                   //testing string quotations
+               }
 
             select1.StartPosition = selectTwo;
+            select1.EndPosition = selectTwo;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -370,32 +390,6 @@ namespace ColorCode
 
         private void RichPad_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            /*string str;
-            RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out str);
-            List<int> intz = new List<int>();
-            List<int> intz_visited = new List<int>();
-
-            foreach (Match match in Regex.Matches(str, "(\r\n(int)\r\n|\r\nint | int\r\n| int )"))
-            {
-                intz.Add(match.Index);
-            }
-                var selectTwo = RichCodePad.Document.Selection.StartPosition;
-
-                var select = RichCodePad.Document.Selection;
-
-
-                for (int i = 0; i < intz.Count; i++)
-                {
-                    if (intz_visited.Contains(intz[i]) == false)
-                    {
-                        select.StartPosition = intz[i];
-                        select.EndPosition = intz[i] + 3;
-                        RichCodePad.Document.GetRange(select.StartPosition, select.EndPosition).CharacterFormat.ForegroundColor = Windows.UI.Colors.Blue;
-                        intz_visited.Add(i);
-                    }
-                }
-
-                select.StartPosition = selectTwo;*/
         }
     }
 }
