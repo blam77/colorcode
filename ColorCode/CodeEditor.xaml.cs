@@ -17,6 +17,7 @@ using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.System;
 using System.Text.RegularExpressions;
+using Windows.UI.Text;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -55,11 +56,18 @@ namespace ColorCode
                   var _Path = file.Path;
                   CodePad.Text = _Content;
                   RichCodePad.Document.SetText(Windows.UI.Text.TextSetOptions.None, _Content);
+                  
               }
               globalFile = file;
+              //Windows.UI.Text.LineSpacingRule aRule = (Windows.UI.Text.LineSpacingRule)3;
+              //aRule.Double = 1;
+              ITextParagraphFormat format = RichCodePad.Document.GetDefaultParagraphFormat();
+                  format.SetLineSpacing(LineSpacingRule.Exactly, (float)12.3);
+                  RichCodePad.Document.SetDefaultParagraphFormat(format);
               
       //      CodePad.Text.setSource(e.stream);
         }
+         
 
 
         private void RichPad_KeyUp(object sender, KeyRoutedEventArgs e)

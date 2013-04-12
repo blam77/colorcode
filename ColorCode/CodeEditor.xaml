@@ -10,7 +10,7 @@
     <Grid Background="White">
         <TextBlock x:Name="LineNumbers" 
                    HorizontalAlignment="Left" 
-                   Margin="20,24,0,0" 
+                   Margin="20,22,0,0" 
                    TextWrapping="Wrap" 
                    Text="1" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14.667" Foreground="Black"
                    Padding="0" ScrollViewer.VerticalScrollBarVisibility="Disabled" LineHeight="10"/>
@@ -26,12 +26,12 @@
             BorderThickness="0"
             HorizontalAlignment="Left" 
             Opacity="0"
-            Margin="10,22,0,0"  
+            Margin="10,20,0,0"  
             TextWrapping="Wrap" 
             VerticalAlignment="Top" 
             AcceptsReturn="True"  
             FontFamily="Courier New" 
-            IsTextPredictionEnabled="False" UseLayoutRounding="False" IsTabStop="False" Width="35"/>
+            IsTextPredictionEnabled="False" UseLayoutRounding="False" IsTabStop="False" Width="35" Height="24"/>
     </Grid>
     <Page.BottomAppBar>
         <AppBar x:Name="bottomAppBar" Padding="10,0,10,0">
