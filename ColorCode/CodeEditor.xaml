@@ -20,7 +20,7 @@
                      IsTextPredictionEnabled="False"
                      FontFamily="Courier New"
                      IsSpellCheckEnabled="False"
-                     TextWrapping="Wrap" Background="White" KeyDown="RichPad_KeyDown" KeyUp="RichPad_KeyUp" SelectionChanged="RichPad_SelectionChanged"/>
+                     TextWrapping="Wrap" Background="White" KeyDown="RichPad_KeyDown" KeyUp="RichPad_KeyUp" SelectionChanged="RichPad_SelectionChanged" TextChanged="On_TextChanged"/>
         <TextBox 
             x:Name="CodePad"
             BorderThickness="0"

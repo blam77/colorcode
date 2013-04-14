@@ -32,8 +32,6 @@ namespace ColorCode
         //string textFromCodePad;
         StorageFile globalFile;
         Boolean isCtrlKeyPressed;
-        List<int> highlights;
-        List<string> wordsToHighlight;
         //string textFromRichPad;
 
         public CodeEditor()
@@ -74,44 +72,19 @@ namespace ColorCode
         {
             if (e.Key == Windows.System.VirtualKey.Control) isCtrlKeyPressed = false;
 
+            string s;
+            RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out s);
 
-            /*string str;
-            RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out str);
-            List<int> intz = new List<int>();
-            List<string> words = new List<string>();
-            List<int> intz_visited = new List<int>();
-            foreach (Match match in Regex.Matches(str, @"\s" + "int" + @"\b|\bint\s|\bint\\;?"))
-            {
-                    intz.Add(match.Index);
-                    words.Add(match.ToString());
-            }
-            if (e.Key == Windows.System.VirtualKey.Space || e.Key == VirtualKey.Enter)
-            {
-                var selectTwo = RichCodePad.Document.Selection.StartPosition;
-
-                var select = RichCodePad.Document.Selection;
-
-                //color the textbox black before you recolor blue
-                RichCodePad.Document.GetRange(0, str.Length).CharacterFormat.ForegroundColor = Windows.UI.Colors.Black;
-
-                for (int i = 0; i < intz.Count; i++)
-                {
-                    if (intz_visited.Contains(intz[i]) == false)
-                    {
-                        select.StartPosition = intz[i];
-                        select.EndPosition = intz[i] + words[i].Length;
-                        RichCodePad.Document.GetRange(select.StartPosition, select.EndPosition).CharacterFormat.ForegroundColor = Windows.UI.Colors.Blue;
-                        intz_visited.Add(i);
-                    }
-                }
-
-                select.StartPosition = selectTwo;
-            }*/
             if (e.Key == Windows.System.VirtualKey.Space || e.Key == VirtualKey.Enter || e.Key == VirtualKey.Back)
             {
-                
                 syntax_highlight();
-                check_lineNumbers();
+                check_lineNumbers(s);
+            }
+
+            int keyCode = (int)e.Key;
+            if (keyCode == 222)
+            {
+                string_Highlighting(s);
             }
        }
 
@@ -154,6 +127,7 @@ namespace ColorCode
                 //trying to fix highlighting with tab
                 syntax_highlight();
             }
+
             if (e.Key == Windows.System.VirtualKey.Control) isCtrlKeyPressed = true;
             else if (isCtrlKeyPressed)
             {
@@ -171,12 +145,9 @@ namespace ColorCode
             }
         }
 
-        private void check_lineNumbers()
+        private void check_lineNumbers(string s)
         {
-            string s;
             int count = 0;
-            RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out s);
-           
             foreach (Match m in Regex.Matches(s, @"\r(\w+)|(\w+)\r|\r")) 
             {
                 count++;
@@ -193,65 +164,68 @@ namespace ColorCode
         private void syntax_highlight()
         {
             string str;
-            highlights = new List<int>();
-            List<int> highlights2 = new List<int>();
-            wordsToHighlight = new List<string>();
-            List<string> wordsToHighlight2 = new List<string>();
+            int first;
+            string end;
+            int len;
             RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out str);
             var selectTwo = RichCodePad.Document.Selection.StartPosition;
             var select1 = RichCodePad.Document.Selection;
 
-                foreach (string s in App.terms.javaSet_type)
+            //color the textbox black before you recolor blue
+            RichCodePad.Document.GetRange(0, str.Length).CharacterFormat.ForegroundColor = Windows.UI.Colors.Black;
+            foreach (string s in App.terms.javaSet_type)
+            {
+                foreach (Match match in Regex.Matches(str, @"\s" + s + @"\b|\b" + s + @"\s|\b" + s + @"\\;?"))
                 {
-                    foreach (Match match in Regex.Matches(str, @"\s" + s + @"\b|\b" + s + @"\s|\b" + s + @"\\;?"))
-                    {
-                        highlights.Add(match.Index);
-                        wordsToHighlight.Add(match.ToString());
-                    }
+                    first = match.Index;
+                    end = match.ToString();
+                    len = end.Length;
+                    RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Blue;
                 }
+            }
 
-                foreach (string s in App.terms.javaSet_cond)
+            foreach (string s in App.terms.javaSet_cond)
+            {
+                foreach (Match match in Regex.Matches(str, @"\s" + s + @"\b|\b" + s + @"\s|\b" + s + @"\\;?|\b"+s+@"\\{?"))
                 {
-                    foreach (Match match in Regex.Matches(str, @"\s" + s + @"\b|\b" + s + @"\s|\b" + s + @"\\;?|\b"+s+@"\\{?"))
-                    {
-                        highlights2.Add(match.Index);
-                        wordsToHighlight2.Add(match.ToString());
-                    }
+                    first = match.Index;
+                    end = match.ToString();
+                    len = end.Length;
+                    RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Indigo;
                 }
+            }
 
-                //color the textbox black before you recolor blue
-                RichCodePad.Document.GetRange(0, str.Length).CharacterFormat.ForegroundColor = Windows.UI.Colors.Black;
-
-                for (int i = 0; i < highlights.Count; i++)
-                {
-                    select1.StartPosition = highlights[i];
-                    select1.EndPosition = highlights[i] + wordsToHighlight[i].Length;
-                    RichCodePad.Document.GetRange(select1.StartPosition, select1.EndPosition).CharacterFormat.ForegroundColor = Windows.UI.Colors.Blue;
-                }
-                for (int h = 0; h < highlights2.Count; h++)
-                {
-                    select1.StartPosition = highlights2[h];
-                    select1.EndPosition = highlights2[h] + wordsToHighlight2[h].Length;
-                    RichCodePad.Document.GetRange(select1.StartPosition, select1.EndPosition).CharacterFormat.ForegroundColor = Windows.UI.Colors.Indigo;
-                }
-
-
-            //still working here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-               foreach (Match match in Regex.Matches(str, @"\/{2}?([^\r]*)\r"))
-                {
-                    int first = match.Index;
-                    string end = match.ToString();
-                    int len = end.Length; 
-                    RichCodePad.Document.GetRange(first, first+len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Green;
-                }
-
-               foreach (Match match in Regex.Matches(str, @"\b\\?\\/?(\w+)\r\b"))
-               {
-                   //testing string quotations
-               }
-
+            comment_Highlighting(str);
+            string_Highlighting(str);
+               
             select1.StartPosition = selectTwo;
             select1.EndPosition = selectTwo;
+        }
+
+        private void string_Highlighting(string str)
+        {
+            //string str;
+            //RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out str);
+            //Regex r = new Regex(@"""[^""\\]*(?:\\.[^""\\]*)*""");
+            foreach (Match match in Regex.Matches(str, @"""[^""\\]*(?:\\.[^""\\]*)*"""))
+            {
+                int first = match.Index;
+                string end = match.ToString();
+                int len = end.Length;
+                RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Gray;
+                //testing string quotations
+            }
+        }
+
+        private void comment_Highlighting(string str)
+        {
+            foreach (Match match in Regex.Matches(str, @"\/{2}?([^\r]*)\r"))
+            {
+                int first = match.Index;
+                string end = match.ToString();
+                int len = end.Length;
+                RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Green;
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -390,6 +364,78 @@ namespace ColorCode
 
         private void RichPad_SelectionChanged(object sender, RoutedEventArgs e)
         {
+            //code for highlighting matching brackets
+            var select = RichCodePad.Document.Selection;
+            string str;
+            int cursor = select.StartPosition;
+            Stack<int> brackets = new Stack<int>();
+            RichCodePad.Document.GetText(TextGetOptions.None, out str);
+            char[] characters = str.ToCharArray();
+            char curr = characters[select.StartPosition];
+            //clear the background first
+            RichCodePad.Document.GetRange(0, str.Length).CharacterFormat.BackgroundColor = Windows.UI.Colors.Transparent;
+
+            if (curr == '{')
+            {
+                RichCodePad.Document.GetRange(cursor, cursor + 1).CharacterFormat.BackgroundColor = Windows.UI.Colors.LightGray;
+                int endBracket = -1;
+                for (int i = select.StartPosition+1; i < str.Length; i++)
+                {
+                    if (characters[i] == '}')
+                    {
+                        if (brackets.Count == 0)
+                        {
+                            endBracket = i;
+                            break;
+                        }
+                        else
+                        {
+                            brackets.Pop();
+                        }
+                    }
+                    else if (characters[i] == '{')
+                    {
+                        brackets.Push(i);
+                    }
+                }
+                if (endBracket != -1)
+                {
+                    RichCodePad.Document.GetRange(endBracket, endBracket + 1).CharacterFormat.BackgroundColor = Windows.UI.Colors.LightGray;
+                }
+            }
+            else if (str.Length > 1 && characters[select.StartPosition - 1] == '}')
+            {
+                RichCodePad.Document.GetRange(cursor-1, cursor).CharacterFormat.BackgroundColor = Windows.UI.Colors.LightGray;
+                int startBracket = -1;
+                for (int i = select.StartPosition-2; i > 0; i--)
+                {
+                    if (characters[i] == '{')
+                    {
+                        if (brackets.Count == 0)
+                        {
+                            startBracket = i;
+                            break;
+                        }
+                        else
+                        {
+                            brackets.Pop();
+                        }
+                    }
+                    else if (characters[i] == '}')
+                    {
+                        brackets.Push(i);
+                    }
+                }
+                if (startBracket != -1)
+                {
+                    RichCodePad.Document.GetRange(startBracket, startBracket + 1).CharacterFormat.BackgroundColor = Windows.UI.Colors.LightGray;
+                }
+            }
+        }
+
+        private void On_TextChanged(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
