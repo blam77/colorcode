@@ -195,8 +195,9 @@ namespace ColorCode
                 }
             }
 
-            comment_Highlighting(str);
             string_Highlighting(str);
+            comment_Highlighting(str);
+
                
             select1.StartPosition = selectTwo;
             select1.EndPosition = selectTwo;
@@ -364,7 +365,6 @@ namespace ColorCode
 
         private void RichPad_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            //code for highlighting matching brackets
             var select = RichCodePad.Document.Selection;
             string str;
             int cursor = select.StartPosition;
@@ -372,16 +372,32 @@ namespace ColorCode
             RichCodePad.Document.GetText(TextGetOptions.None, out str);
             char[] characters = str.ToCharArray();
             char curr = characters[select.StartPosition];
-            //clear the background first
-            RichCodePad.Document.GetRange(0, str.Length).CharacterFormat.BackgroundColor = Windows.UI.Colors.Transparent;
 
-            if (curr == '{')
+            //determine whether brackets or parenthesis
+            if (curr == '{' || (cursor - 1 >= 0 && characters[cursor - 1] == '}'))
+                brackParen_Matching(str, characters, curr, '{', '}');
+            else if (curr == '(' || (cursor - 1 >= 0 && characters[cursor-1] == ')'))
+                brackParen_Matching(str, characters, curr, '(', ')');
+            else
+                RichCodePad.Document.GetRange(0, str.Length).CharacterFormat.BackgroundColor = Windows.UI.Colors.Transparent;
+        }
+
+        private void brackParen_Matching(string body, char[] bodyChars, char curr, char start, char end)
+        {
+            //code for highlighting matching brackets/parenthesis
+            var select = RichCodePad.Document.Selection;
+            int cursor = select.StartPosition;
+            Stack<int> brackets = new Stack<int>();
+
+            //clear the background first
+            RichCodePad.Document.GetRange(0, body.Length).CharacterFormat.BackgroundColor = Windows.UI.Colors.Transparent;
+
+            if (curr == start)
             {
-                RichCodePad.Document.GetRange(cursor, cursor + 1).CharacterFormat.BackgroundColor = Windows.UI.Colors.LightGray;
                 int endBracket = -1;
-                for (int i = select.StartPosition+1; i < str.Length; i++)
+                for (int i = select.StartPosition + 1; i < body.Length; i++)
                 {
-                    if (characters[i] == '}')
+                    if (bodyChars[i] == end)
                     {
                         if (brackets.Count == 0)
                         {
@@ -393,23 +409,23 @@ namespace ColorCode
                             brackets.Pop();
                         }
                     }
-                    else if (characters[i] == '{')
+                    else if (bodyChars[i] == start)
                     {
                         brackets.Push(i);
-                    }
+                    } 
                 }
                 if (endBracket != -1)
                 {
+                    RichCodePad.Document.GetRange(cursor, cursor + 1).CharacterFormat.BackgroundColor = Windows.UI.Colors.LightGray;
                     RichCodePad.Document.GetRange(endBracket, endBracket + 1).CharacterFormat.BackgroundColor = Windows.UI.Colors.LightGray;
                 }
             }
-            else if (str.Length > 1 && characters[select.StartPosition - 1] == '}')
+            else if (bodyChars[cursor - 1] == end)
             {
-                RichCodePad.Document.GetRange(cursor-1, cursor).CharacterFormat.BackgroundColor = Windows.UI.Colors.LightGray;
                 int startBracket = -1;
-                for (int i = select.StartPosition-2; i > 0; i--)
+                for (int i = select.StartPosition - 2; i >= 0; i--)
                 {
-                    if (characters[i] == '{')
+                    if (bodyChars[i] == start)
                     {
                         if (brackets.Count == 0)
                         {
@@ -421,21 +437,17 @@ namespace ColorCode
                             brackets.Pop();
                         }
                     }
-                    else if (characters[i] == '}')
+                    else if (bodyChars[i] == end)
                     {
                         brackets.Push(i);
                     }
                 }
                 if (startBracket != -1)
                 {
+                    RichCodePad.Document.GetRange(cursor - 1, cursor).CharacterFormat.BackgroundColor = Windows.UI.Colors.LightGray;
                     RichCodePad.Document.GetRange(startBracket, startBracket + 1).CharacterFormat.BackgroundColor = Windows.UI.Colors.LightGray;
                 }
             }
-        }
-
-        private void On_TextChanged(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
