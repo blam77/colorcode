@@ -28,6 +28,7 @@ namespace ColorCode
         {
             this.InitializeComponent();
             App.terms.loadFiles();
+
         }
 
         /// <summary>
@@ -78,6 +79,8 @@ namespace ColorCode
                 savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
                 // Dropdown of file types the user can save the file as
                 savePicker.FileTypeChoices.Add("Plain Text", new List<string>() { ".txt" });
+                savePicker.FileTypeChoices.Add("Java Source File", new List<string>() { ".java" });
+                savePicker.FileTypeChoices.Add("C++ Source File", new List<string>() { ".cpp" });
                 // Default file name if the user does not type one in or select a file to replace
                 savePicker.SuggestedFileName = "New Document";
 
@@ -108,7 +111,9 @@ namespace ColorCode
                 // Dropdown of file types the user can save the file as
                 openPicker.ViewMode = PickerViewMode.List;
                 openPicker.FileTypeFilter.Add(".txt");
-                    
+                openPicker.FileTypeFilter.Add(".java");
+                openPicker.FileTypeFilter.Add(".cpp");
+
                 IAsyncOperation<StorageFile> asyncOp = openPicker.PickSingleFileAsync();
                 StorageFile file = await asyncOp;
 

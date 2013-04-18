@@ -62,6 +62,15 @@ namespace ColorCode
               ITextParagraphFormat format = RichCodePad.Document.GetDefaultParagraphFormat();
                   format.SetLineSpacing(LineSpacingRule.Exactly, (float)12.3);
                   RichCodePad.Document.SetDefaultParagraphFormat(format);
+
+                  syntax_highlight();
+                  check_lineNumbers();
+
+                  RichCodePad.Document.Selection.StartPosition = 0;
+                  RichCodePad.Document.Selection.EndPosition = 0;
+
+
+
               
       //      CodePad.Text.setSource(e.stream);
         }
@@ -247,6 +256,8 @@ namespace ColorCode
                 // Dropdown of file types the user can save the file as
                 openPicker.ViewMode = PickerViewMode.List;
                 openPicker.FileTypeFilter.Add(".txt");
+                openPicker.FileTypeFilter.Add(".java");
+                openPicker.FileTypeFilter.Add(".cpp");
                 //openPicker.FileTypeFilter.Add(".java");
 
                 IAsyncOperation<StorageFile> asyncOp = openPicker.PickSingleFileAsync();
@@ -282,6 +293,8 @@ namespace ColorCode
                 savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
                 // Dropdown of file types the user can save the file as
                 savePicker.FileTypeChoices.Add("Plain Text", new List<string>() { ".txt" });
+                savePicker.FileTypeChoices.Add("Java Source File", new List<string>() { ".java" });
+                savePicker.FileTypeChoices.Add("C++ Source File", new List<string>() { ".cpp" });
                 // Default file name if the user does not type one in or select a file to replace
                 savePicker.SuggestedFileName = "New Document";
 
