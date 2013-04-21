@@ -64,19 +64,20 @@ namespace ColorCode
                   RichCodePad.Document.SetDefaultParagraphFormat(format);
 
                   syntax_highlight();
-                  check_lineNumbers();
+
+                  string s;
+                  RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out s);
+                  check_lineNumbers(s);
 
                   RichCodePad.Document.Selection.StartPosition = 0;
                   RichCodePad.Document.Selection.EndPosition = 0;
 
 
-
               
       //      CodePad.Text.setSource(e.stream);
         }
-         
 
-
+      
         private void RichPad_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Control) isCtrlKeyPressed = false;

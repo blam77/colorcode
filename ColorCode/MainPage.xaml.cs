@@ -6,6 +6,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,6 +15,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -24,6 +26,8 @@ namespace ColorCode
     /// </summary>
     public sealed partial class MainPage : ColorCode.Common.LayoutAwarePage
     {
+        Boolean isCtrlKeyPressed;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -42,17 +46,8 @@ namespace ColorCode
         /// session.  This will be null the first time a page is visited.</param>
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
-            if (pageState != null && pageState.ContainsKey("greetingOutputText"))
-            {
-                greetingOutput.Text = pageState["greetingOutputText"].ToString();
-            }
+            
 
-            //restore other values in app data
-            Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
-            if (roamingSettings.Values.ContainsKey("userName"))
-            {
-                nameInput.Text = roamingSettings.Values["userName"].ToString();
-            }
         }
 
         /// <summary>
@@ -61,10 +56,7 @@ namespace ColorCode
         /// requirements of <see cref="SuspensionManager.SessionState"/>.
         /// </summary>
         /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
-        protected override void SaveState(Dictionary<String, Object> pageState)
-        {
-            pageState["greetingOutputText"] = greetingOutput.Text;
-        }
+       
 
         private async void sButton_Click(object sender, RoutedEventArgs e)
         {
@@ -139,7 +131,6 @@ namespace ColorCode
         private void Input_TextChanged(object sender, TextChangedEventArgs e)
         {
             Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
-            roamingSettings.Values["userName"] = nameInput.Text;
         }
 
         private void EditorButton_Click(object sender, RoutedEventArgs e)
@@ -151,6 +142,26 @@ namespace ColorCode
             }
         }
 
+        private void RichPad_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+
+            
+            if (e.Key == Windows.System.VirtualKey.Control) isCtrlKeyPressed = true;
+            else if (isCtrlKeyPressed)
+            {
+
+                if (e.Key == VirtualKey.O)
+                {
+                    oButton_Click(this, e);
+                }
+                if (e.Key == VirtualKey.N)
+                {
+                    EditorButton_Click(this, e);
+                }
+
+
+            }
+        }
         internal bool EnsureUnsnapped()
         {
             // FilePicker APIs will not work if the application is in a snapped state.
