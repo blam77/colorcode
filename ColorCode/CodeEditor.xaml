@@ -7,7 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+<<<<<<< HEAD
     <Grid x:Name="PageBackground" Background="White">
+=======
+   
+        
+
+        <Grid Background="White">
+>>>>>>> Attempt at syntax highlight optimization
         <TextBlock x:Name="LineNumbers" 
                    HorizontalAlignment="Left" 
                    Margin="20,22,0,0" 
@@ -19,11 +26,16 @@
                      AcceptsReturn="True"
                      IsTextPredictionEnabled="False"
                      FontFamily="Courier New"
+<<<<<<< HEAD
                      IsSpellCheckEnabled="False" KeyDown="RichPad_KeyDown" KeyUp="RichPad_KeyUp" SelectionChanged="RichPad_SelectionChanged" TextWrapping="NoWrap">
             <RichEditBox.Background>
                 <SolidColorBrush Color="White" Opacity="0"/>
             </RichEditBox.Background>
         </RichEditBox>
+=======
+                     IsSpellCheckEnabled="False"
+                     TextWrapping="Wrap" Background="White" KeyDown="RichPad_KeyDown" KeyUp="RichPad_KeyUp" SelectionChanged="RichPad_SelectionChanged" FontSize="14.668"/>
+>>>>>>> Attempt at syntax highlight optimization
         <TextBox 
             x:Name="CodePad"
             BorderThickness="0"

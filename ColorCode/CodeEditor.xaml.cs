@@ -23,11 +23,12 @@ using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Popups;
 
+// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace ColorCode
 {
     /// <summary>
-    /// The code editor of the ColorCode application
+    /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
 
     public sealed partial class CodeEditor : Page
@@ -35,6 +36,7 @@ namespace ColorCode
         //string textFromCodePad;
         StorageFile globalFile;
         Boolean isCtrlKeyPressed;
+        int keysPressed;
         //string textFromRichPad;
         private Rect windowBounds;
         // Desired width for the settings UI. UI guidelines specify this should be 346 or 646 depending on your needs.
@@ -65,6 +67,7 @@ namespace ColorCode
         {
               StorageFile file = e.Parameter as StorageFile;
               CodePad.Text = "";
+              RichCodePad.Document.SetText(TextSetOptions.ApplyRtfDocumentDefaults, " ");
               if (file != null)
               {
                   var _Content = await Windows.Storage.FileIO.ReadTextAsync(file);
@@ -73,6 +76,10 @@ namespace ColorCode
                   RichCodePad.Document.SetText(Windows.UI.Text.TextSetOptions.None, _Content);
                   
               }
+              
+
+          
+
               globalFile = file;
               //Windows.UI.Text.LineSpacingRule aRule = (Windows.UI.Text.LineSpacingRule)3;
               //aRule.Double = 1;
@@ -149,16 +156,40 @@ namespace ColorCode
 
             string s;
             RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out s);
-
-            if (e.Key == Windows.System.VirtualKey.Space || e.Key == VirtualKey.Enter || e.Key == VirtualKey.Back)
+            if (e.Key == VirtualKey.Enter)
             {
-                syntax_highlight();
+                keysPressed++;
+                syntax_highlight_string(keysPressed);
+                keysPressed = 0;
+                check_lineNumbers(s);
+
+            }
+            int keyValue = (int)e.Key;
+            if ((keyValue >= 0x30 && keyValue <= 0x39) // numbers
+             || (keyValue >= 0x41 && keyValue <= 0x5A) // letters
+             || (keyValue >= 0x60 && keyValue <= 0x69)) // numpad
+            {
+                keysPressed++;
+            }
+            if (e.Key == Windows.System.VirtualKey.Space)
+            {
+                //syntax_highlight();'
+                keysPressed++;
+                syntax_highlight_string(keysPressed);
                 check_lineNumbers(s);
             }
 
+            if (e.Key == VirtualKey.Back)
+            {
+                //syntax_highlight();'
+                keysPressed--;
+                syntax_highlight_string(keysPressed);
+                check_lineNumbers(s);
+            }
             int keyCode = (int)e.Key;
             if (keyCode == 222)
             {
+                keysPressed++;
                 string_Highlighting(s);
             }
        }
@@ -274,6 +305,52 @@ namespace ColorCode
             comment_Highlighting(str);
 
                
+            select1.StartPosition = selectTwo;
+            select1.EndPosition = selectTwo;
+        }
+
+        private void syntax_highlight_string(int line)
+        {
+            string str;
+            int first;
+            string end;
+            int len;
+            var selectTwo = RichCodePad.Document.Selection.StartPosition;
+            var select1 = RichCodePad.Document.Selection;
+
+            int startOfLine = RichCodePad.Document.Selection.StartPosition - (line);
+
+            ITextRange strs = RichCodePad.Document.GetRange(startOfLine, selectTwo);
+            strs.GetText(TextGetOptions.None, out str);
+
+            //color the textbox black before you recolor blue
+            RichCodePad.Document.GetRange(startOfLine, selectTwo).CharacterFormat.ForegroundColor = Windows.UI.Colors.Black;
+            foreach (string s in App.terms.javaSet_type)
+            {
+                foreach (Match match in Regex.Matches(str, @"\s" + s + @"\b|\b" + s + @"\s|\b" + s + @"\\;?"))
+                {
+                    first = match.Index;
+                    end = match.ToString();
+                    len = end.Length;
+                    RichCodePad.Document.GetRange(first+startOfLine, first + startOfLine + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Blue;
+                }
+            }
+
+            foreach (string s in App.terms.javaSet_cond)
+            {
+                foreach (Match match in Regex.Matches(str, @"\s" + s + @"\b|\b" + s + @"\s|\b" + s + @"\\;?|\b" + s + @"\\{?"))
+                {
+                    first = match.Index;
+                    end = match.ToString();
+                    len = end.Length;
+                    RichCodePad.Document.GetRange(first + startOfLine, first + startOfLine + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Indigo;
+                }
+            }
+
+            string_Highlighting(str);
+            comment_Highlighting(str);
+
+
             select1.StartPosition = selectTwo;
             select1.EndPosition = selectTwo;
         }
@@ -397,7 +474,7 @@ namespace ColorCode
 
                 if (file == null)
                 {
-                    //insert warning
+                    saButton_Click(sender, e);
                 }
                 else
                 {
