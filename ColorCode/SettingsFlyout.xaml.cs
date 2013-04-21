@@ -35,6 +35,17 @@ namespace ColorCode
         public SettingsFlyout()
         {
             this.InitializeComponent();
+
+            ComboBoxItem light = new ComboBoxItem();
+            light.Name = "Light";
+            ComboBoxItem dark = new ComboBoxItem();
+            dark.Name = "Dark";
+            ComboBoxItem gators = new ComboBoxItem();
+            gators.Name = "Gators";
+            ThemeBox.Items.Add(light);
+            ThemeBox.Items.Add(dark);
+            ThemeBox.Items.Add(gators);
+
             FlyoutContent.Transitions = new TransitionCollection();
             FlyoutContent.Transitions.Add(new EntranceThemeTransition()
             {
@@ -86,17 +97,17 @@ namespace ColorCode
 
             try
             {
-                List<ComboBoxItem> lst = new List<ComboBoxItem>();
-                lst.Add(Light);
-                lst.Add(Dark);
-                lst.Add(Gators);
-                ThemeBox.ItemsSource = lst;
-                ThemeBox.SelectedItem = lst.IndexOf(Light);
+                //List<ComboBoxItem> lst = new List<ComboBoxItem>();
+                //lst.Add(Light);
+                //lst.Add(Dark);
+                //lst.Add(Gators);
+                //ThemeBox.ItemsSource = lst;
+                //ThemeBox.SelectedItem = lst.IndexOf(Light);
                 var dis = ThemeBox.DisplayMemberPath;
                 var obj = ThemeBox.SelectedItem;
                 var not = ThemeBox.SelectedIndex;
                 var val = ThemeBox.SelectedValue;
-                if (ThemeBox.SelectedItem == Light)
+                if (ThemeBox.SelectedItem == "Light")
                 {
                     CodeEditor.textColor = Colors.Black;
                     CodeEditor.color1 = Colors.Blue;
@@ -104,7 +115,7 @@ namespace ColorCode
                     CodeEditor.commentColor = Colors.Green;
                     CodeEditor.commentColor = Colors.Gray;
                 }
-                else if (ThemeBox.SelectedItem == Dark)
+                else if (ThemeBox.SelectedItem == "Dark")
                 {
 
                     CodeEditor.textColor = Colors.White;

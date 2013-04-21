@@ -55,7 +55,7 @@ namespace ColorCode
         {
             this.InitializeComponent();
             windowBounds = Window.Current.Bounds;
-            PageBackground.Background = new SolidColorBrush(Colors.Beige);
+            PageBackground.Background = new SolidColorBrush(Colors.Black);
         }
         /// <summary>
         /// Invoked when this page is about to be displayed in a Frame.
@@ -278,7 +278,7 @@ namespace ColorCode
             var select1 = RichCodePad.Document.Selection;
 
             //color the textbox black before you recolor blue
-            RichCodePad.Document.GetRange(0, str.Length).CharacterFormat.ForegroundColor = Windows.UI.Colors.Black;
+            RichCodePad.Document.GetRange(0, str.Length).CharacterFormat.ForegroundColor = Windows.UI.Colors.Silver;
             foreach (string s in App.terms.javaSet_type)
             {
                 foreach (Match match in Regex.Matches(str, @"\s" + s + @"\b|\b" + s + @"\s|\b" + s + @"\\;?"))
@@ -297,7 +297,7 @@ namespace ColorCode
                     first = match.Index;
                     end = match.ToString();
                     len = end.Length;
-                    RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Indigo;
+                    RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.MediumPurple;
                 }
             }
 
@@ -365,7 +365,7 @@ namespace ColorCode
                 int first = match.Index;
                 string end = match.ToString();
                 int len = end.Length;
-                RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Gray;
+                RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.LightSlateGray;
                 //testing string quotations
             }
         }
@@ -377,7 +377,7 @@ namespace ColorCode
                 int first = match.Index;
                 string end = match.ToString();
                 int len = end.Length;
-                RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Green;
+                RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.LimeGreen;
             }
         }
 

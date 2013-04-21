@@ -19,12 +19,13 @@
                    HorizontalAlignment="Left" 
                    Margin="20,22,0,0" 
                    TextWrapping="Wrap" 
-                   Text="1" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14.667" Foreground="Black"
+                   Text="1" VerticalAlignment="Top" FontFamily="Courier New" FontSize="14.667" Foreground="Silver"
                    Padding="0" ScrollViewer.VerticalScrollBarVisibility="Disabled" LineHeight="10"/>
         <RichEditBox x:Name="RichCodePad" Margin="50,20,20,20" 
                      BorderThickness="0"
                      AcceptsReturn="True"
                      IsTextPredictionEnabled="False"
+                     Foreground="Silver"
                      FontFamily="Courier New"
 <<<<<<< HEAD
                      IsSpellCheckEnabled="False" KeyDown="RichPad_KeyDown" KeyUp="RichPad_KeyUp" SelectionChanged="RichPad_SelectionChanged" TextWrapping="NoWrap">
@@ -46,7 +47,7 @@
             VerticalAlignment="Top" 
             AcceptsReturn="True"  
             FontFamily="Courier New" 
-            IsTextPredictionEnabled="False" UseLayoutRounding="False" IsTabStop="False" Width="35" Height="24"/>
+            IsTextPredictionEnabled="False" UseLayoutRounding="False" IsTabStop="False" Width="35" Height="24" Foreground="Silver"/>
     </Grid>
     <Page.BottomAppBar>
         <AppBar x:Name="bottomAppBar" Padding="10,0,10,0">
