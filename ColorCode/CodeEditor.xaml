@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="White">
+    <Grid x:Name="PageBackground" Background="White">
         <TextBlock x:Name="LineNumbers" 
                    HorizontalAlignment="Left" 
                    Margin="20,22,0,0" 
@@ -19,8 +19,11 @@
                      AcceptsReturn="True"
                      IsTextPredictionEnabled="False"
                      FontFamily="Courier New"
-                     IsSpellCheckEnabled="False"
-                     TextWrapping="Wrap" Background="White" KeyDown="RichPad_KeyDown" KeyUp="RichPad_KeyUp" SelectionChanged="RichPad_SelectionChanged"/>
+                     IsSpellCheckEnabled="False" KeyDown="RichPad_KeyDown" KeyUp="RichPad_KeyUp" SelectionChanged="RichPad_SelectionChanged" TextWrapping="NoWrap">
+            <RichEditBox.Background>
+                <SolidColorBrush Color="White" Opacity="0"/>
+            </RichEditBox.Background>
+        </RichEditBox>
         <TextBox 
             x:Name="CodePad"
             BorderThickness="0"

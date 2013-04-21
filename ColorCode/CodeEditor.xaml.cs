@@ -18,6 +18,10 @@ using Windows.UI.ViewManagement;
 using Windows.System;
 using System.Text.RegularExpressions;
 using Windows.UI.Text;
+using Windows.UI;
+using Windows.UI.ApplicationSettings;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Popups;
 
 
 namespace ColorCode
@@ -32,16 +36,30 @@ namespace ColorCode
         StorageFile globalFile;
         Boolean isCtrlKeyPressed;
         //string textFromRichPad;
+        private Rect windowBounds;
+        // Desired width for the settings UI. UI guidelines specify this should be 346 or 646 depending on your needs.
+        private double settingsWidth = 346;
+
+        public static Color textColor = Colors.Black;
+        public static Color color1 = Colors.Blue;
+        public static Color color2 = Colors.Indigo;
+        public static Color commentColor = Colors.Green;
+        public static Color stringColor = Colors.Gray;
+
+        // This is the container that will hold our custom content.
+        private Popup settingsPopup;
 
         public CodeEditor()
         {
             this.InitializeComponent();
+            windowBounds = Window.Current.Bounds;
+            PageBackground.Background = new SolidColorBrush(Colors.Beige);
         }
-
         /// <summary>
         /// Invoked when this page is about to be displayed in a Frame.
         /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.  The Parameter
+       
+ /// <param name="e">Event data that describes how this page was reached.  The Parameter
         /// property is typically used to configure the page.</param>
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -71,9 +89,57 @@ namespace ColorCode
                   RichCodePad.Document.Selection.StartPosition = 0;
                   RichCodePad.Document.Selection.EndPosition = 0;
 
-
+                  loadSettings();
               
       //      CodePad.Text.setSource(e.stream);
+        }
+
+        void loadSettings()
+        {
+            SettingsPane.GetForCurrentView().CommandsRequested += CodeEditor_CommandsRequested;
+        }
+
+        void onSettingsCommand(IUICommand command)
+        {
+            SettingsCommand settingsCommand = (SettingsCommand)command;
+            // Create a Popup window which will contain our flyout.
+            settingsPopup = new Popup();
+            settingsPopup.Closed += OnPopupClosed;
+            Window.Current.Activated += OnWindowActivated;
+            settingsPopup.IsLightDismissEnabled = true;
+            settingsPopup.Width = settingsWidth;
+            settingsPopup.Height = windowBounds.Height;
+
+            // Add the proper animation for the panel.
+            settingsPopup.ChildTransitions = new TransitionCollection();
+            settingsPopup.ChildTransitions.Add(new PaneThemeTransition()
+            {
+                Edge = (SettingsPane.Edge == SettingsEdgeLocation.Right) ?
+                       EdgeTransitionLocation.Right :
+                       EdgeTransitionLocation.Left
+            });
+
+            // Create a SettingsFlyout the same dimenssions as the Popup.
+            SettingsFlyout mypane = new SettingsFlyout();
+            mypane.Width = settingsWidth;
+            mypane.Height = windowBounds.Height;
+
+            // Place the SettingsFlyout inside our Popup window.
+            settingsPopup.Child = mypane;
+
+            // Let's define the location of our Popup.
+            settingsPopup.SetValue(Canvas.LeftProperty, SettingsPane.Edge == SettingsEdgeLocation.Right ? (windowBounds.Width - settingsWidth) : 0);
+            settingsPopup.SetValue(Canvas.TopProperty, 0);
+            settingsPopup.IsOpen = true;
+        }
+
+        void CodeEditor_CommandsRequested(SettingsPane settingsPane, SettingsPaneCommandsRequestedEventArgs eventArgs)
+        {
+            //throw new NotImplementedException();
+            UICommandInvokedHandler handler = new UICommandInvokedHandler(onSettingsCommand);
+
+            SettingsCommand generalCommand = new SettingsCommand("generalSettings", "General", handler);
+            eventArgs.Request.ApplicationCommands.Add(generalCommand);
         }
 
       
@@ -461,6 +527,19 @@ namespace ColorCode
                     RichCodePad.Document.GetRange(startBracket, startBracket + 1).CharacterFormat.BackgroundColor = Windows.UI.Colors.LightGray;
                 }
             }
+        }
+
+        private void OnWindowActivated(object sender, Windows.UI.Core.WindowActivatedEventArgs e)
+        {
+            if (e.WindowActivationState == Windows.UI.Core.CoreWindowActivationState.Deactivated)
+            {
+                settingsPopup.IsOpen = false;
+            }
+        }
+
+        void OnPopupClosed(object sender, object e)
+        {
+            Window.Current.Activated -= OnWindowActivated;
         }
     }
 }

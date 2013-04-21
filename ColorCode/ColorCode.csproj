@@ -106,6 +106,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingsFlyout.xaml.cs">
+      <DependentUpon>SettingsFlyout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="InitializeKeyTerms.cs" />
     <Compile Include="CodeEditor.xaml.cs">
       <DependentUpon>CodeEditor.xaml</DependentUpon>
@@ -142,6 +145,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="SettingsFlyout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CodeEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
