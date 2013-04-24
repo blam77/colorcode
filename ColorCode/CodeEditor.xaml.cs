@@ -34,6 +34,7 @@ namespace ColorCode
     public sealed partial class CodeEditor : Page
     {
         //string textFromCodePad;
+        String fileExtension = ".txt";
         StorageFile globalFile;
         Boolean isCtrlKeyPressed;
         int keysPressed;
@@ -47,6 +48,10 @@ namespace ColorCode
         public static Color color2 = Colors.Indigo;
         public static Color commentColor = Colors.Green;
         public static Color stringColor = Colors.Gray;
+        public static Color lineNumberColor = Colors.Silver;
+        public static Color fontColor = Colors.Silver;
+        public HashSet<string> lang_type = App.terms.javaSet_type;
+        public HashSet<string> cond_type = App.terms.javaSet_cond;
 
         // This is the container that will hold our custom content.
         private Popup settingsPopup;
@@ -55,7 +60,9 @@ namespace ColorCode
         {
             this.InitializeComponent();
             windowBounds = Window.Current.Bounds;
-            PageBackground.Background = new SolidColorBrush(Colors.Beige);
+            PageBackground.Background = new SolidColorBrush(Colors.Black    );
+            LineNumbers.Foreground = new SolidColorBrush(lineNumberColor);
+            RichCodePad.Foreground = new SolidColorBrush(fontColor);
         }
         /// <summary>
         /// Invoked when this page is about to be displayed in a Frame.
@@ -72,6 +79,19 @@ namespace ColorCode
               {
                   var _Content = await Windows.Storage.FileIO.ReadTextAsync(file);
                   var _Path = file.Path;
+                  fileExtension = file.FileType;
+                  if (fileExtension == ".java")
+                  {
+                      lang_type = App.terms.javaSet_type;
+                      cond_type = App.terms.javaSet_cond;
+                  }
+                  if (fileExtension == ".cpp")
+                  {
+                      lang_type = App.terms.cppSet_type;
+                      cond_type = App.terms.cppSet_cond;
+
+                  }
+
                   CodePad.Text = _Content;
                   RichCodePad.Document.SetText(Windows.UI.Text.TextSetOptions.None, _Content);
                   
@@ -87,7 +107,7 @@ namespace ColorCode
                   format.SetLineSpacing(LineSpacingRule.Exactly, (float)12.3);
                   RichCodePad.Document.SetDefaultParagraphFormat(format);
 
-                  syntax_highlight();
+                  if (fileExtension != ".txt") { syntax_highlight(); }
 
                   string s;
                   RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.None, out s);
@@ -159,7 +179,7 @@ namespace ColorCode
             if (e.Key == VirtualKey.Enter)
             {
                 keysPressed++;
-                syntax_highlight_string(keysPressed);
+                if (fileExtension != ".txt") { syntax_highlight_string(keysPressed); }
                 keysPressed = 0;
                 check_lineNumbers(s);
 
@@ -175,7 +195,7 @@ namespace ColorCode
             {
                 //syntax_highlight();'
                 keysPressed++;
-                syntax_highlight_string(keysPressed);
+                if (fileExtension != ".txt") { syntax_highlight_string(keysPressed); }
                 check_lineNumbers(s);
             }
 
@@ -183,14 +203,14 @@ namespace ColorCode
             {
                 //syntax_highlight();'
                 keysPressed--;
-                syntax_highlight_string(keysPressed);
+                if (fileExtension != ".txt") { syntax_highlight_string(keysPressed); }
                 check_lineNumbers(s);
             }
             int keyCode = (int)e.Key;
             if (keyCode == 222)
             {
                 keysPressed++;
-                string_Highlighting(s);
+                if (fileExtension != ".txt") { string_Highlighting(s); }
             }
        }
 
@@ -278,8 +298,8 @@ namespace ColorCode
             var select1 = RichCodePad.Document.Selection;
 
             //color the textbox black before you recolor blue
-            RichCodePad.Document.GetRange(0, str.Length).CharacterFormat.ForegroundColor = Windows.UI.Colors.Black;
-            foreach (string s in App.terms.javaSet_type)
+            RichCodePad.Document.GetRange(0, str.Length).CharacterFormat.ForegroundColor = Windows.UI.Colors.Silver;
+            foreach (string s in lang_type)
             {
                 foreach (Match match in Regex.Matches(str, @"\s" + s + @"\b|\b" + s + @"\s|\b" + s + @"\\;?"))
                 {
@@ -290,14 +310,14 @@ namespace ColorCode
                 }
             }
 
-            foreach (string s in App.terms.javaSet_cond)
+            foreach (string s in cond_type)
             {
                 foreach (Match match in Regex.Matches(str, @"\s" + s + @"\b|\b" + s + @"\s|\b" + s + @"\\;?|\b"+s+@"\\{?"))
                 {
                     first = match.Index;
                     end = match.ToString();
                     len = end.Length;
-                    RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Indigo;
+                    RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.MediumPurple;
                 }
             }
 
@@ -324,8 +344,8 @@ namespace ColorCode
             strs.GetText(TextGetOptions.None, out str);
 
             //color the textbox black before you recolor blue
-            RichCodePad.Document.GetRange(startOfLine, selectTwo).CharacterFormat.ForegroundColor = Windows.UI.Colors.Black;
-            foreach (string s in App.terms.javaSet_type)
+            RichCodePad.Document.GetRange(startOfLine, selectTwo).CharacterFormat.ForegroundColor = Windows.UI.Colors.Silver;
+            foreach (string s in lang_type)
             {
                 foreach (Match match in Regex.Matches(str, @"\s" + s + @"\b|\b" + s + @"\s|\b" + s + @"\\;?"))
                 {
@@ -336,7 +356,7 @@ namespace ColorCode
                 }
             }
 
-            foreach (string s in App.terms.javaSet_cond)
+            foreach (string s in cond_type)
             {
                 foreach (Match match in Regex.Matches(str, @"\s" + s + @"\b|\b" + s + @"\s|\b" + s + @"\\;?|\b" + s + @"\\{?"))
                 {
@@ -365,7 +385,7 @@ namespace ColorCode
                 int first = match.Index;
                 string end = match.ToString();
                 int len = end.Length;
-                RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Gray;
+                RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.LightSlateGray;
                 //testing string quotations
             }
         }
@@ -377,7 +397,7 @@ namespace ColorCode
                 int first = match.Index;
                 string end = match.ToString();
                 int len = end.Length;
-                RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.Green;
+                RichCodePad.Document.GetRange(first, first + len).CharacterFormat.ForegroundColor = Windows.UI.Colors.LimeGreen;
             }
         }
 
@@ -413,6 +433,18 @@ namespace ColorCode
                     //var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
 
                     //await new Windows.UI.Popups.MessageDialog(_Content).ShowAsync();
+                    fileExtension = file.FileType;
+                    if (fileExtension == ".java")
+                    {
+                        lang_type = App.terms.javaSet_type;
+                        cond_type = App.terms.javaSet_cond;
+                    }
+                    if (fileExtension == ".cpp")
+                    {
+                        lang_type = App.terms.cppSet_type;
+                        cond_type = App.terms.cppSet_cond;
+
+                    }
 
                     if (this.Frame != null)
                     {
@@ -448,12 +480,33 @@ namespace ColorCode
                     string _Content;
                     RichCodePad.Document.GetText(Windows.UI.Text.TextGetOptions.UseCrlf, out _Content);
                     await FileIO.WriteTextAsync(file, _Content);
+                    fileExtension = file.FileType;
+                    if (fileExtension == ".java")
+                    {
+                        lang_type = App.terms.javaSet_type;
+                        cond_type = App.terms.javaSet_cond;
+                    }
+                    if (fileExtension == ".cpp")
+                    {
+                        lang_type = App.terms.cppSet_type;
+                        cond_type = App.terms.cppSet_cond;
+
+                    }
+                    if (fileExtension != ".txt")
+                    {
+                        syntax_highlight();
+                    }
+                    if (fileExtension == ".txt")
+                    {
+                        RichCodePad.Foreground = new SolidColorBrush(fontColor);
+                    }
              /*       if (this.Frame != null)
                     {
                         this.Frame.Navigate(typeof(CodeEditor), file);
                     }
                     */
                 }
+
                 
             }
         }
@@ -475,6 +528,7 @@ namespace ColorCode
                 if (file == null)
                 {
                     saButton_Click(sender, e);
+                   
                 }
                 else
                 {
@@ -495,6 +549,7 @@ namespace ColorCode
                         }
                     }  */
                 }
+               
             }
         }
 
