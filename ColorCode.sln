@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorCode", "ColorCode\ColorCode.csproj", "{19BA951E-B987-41C7-8AC0-AC189D019C0E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CDE5FEF0-2583-4BCB-A27F-8F89FF8D4BF2}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\..\Downloads\Callisto.vsix = ..\..\..\Downloads\Callisto.vsix
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

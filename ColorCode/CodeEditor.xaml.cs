@@ -60,9 +60,13 @@ namespace ColorCode
         {
             this.InitializeComponent();
             windowBounds = Window.Current.Bounds;
+<<<<<<< HEAD
             PageBackground.Background = new SolidColorBrush(Colors.Black    );
             LineNumbers.Foreground = new SolidColorBrush(lineNumberColor);
             RichCodePad.Foreground = new SolidColorBrush(fontColor);
+=======
+            PageBackground.Background = new SolidColorBrush(Colors.Black);
+>>>>>>> 1aa49583838205e17bb4b4a9975e8b94bd64a505
         }
         /// <summary>
         /// Invoked when this page is about to be displayed in a Frame.
@@ -299,7 +303,11 @@ namespace ColorCode
 
             //color the textbox black before you recolor blue
             RichCodePad.Document.GetRange(0, str.Length).CharacterFormat.ForegroundColor = Windows.UI.Colors.Silver;
+<<<<<<< HEAD
             foreach (string s in lang_type)
+=======
+            foreach (string s in App.terms.javaSet_type)
+>>>>>>> 1aa49583838205e17bb4b4a9975e8b94bd64a505
             {
                 foreach (Match match in Regex.Matches(str, @"\s" + s + @"\b|\b" + s + @"\s|\b" + s + @"\\;?"))
                 {
